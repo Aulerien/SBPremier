@@ -6,7 +6,15 @@
     <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.css}"/>
     <link rel="stylesheet" type="text/css" th:href="@{/css/mdb.css}"/>
     <link rel="stylesheet" type="text/css" th:href="@{/css/jquery.dataTables.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/material-icons.min.css}"/>
 </head>
+
+<style>
+    body{
+        background-image: imge("static/img/apartement.jpg");
+    }
+</style>
+
 <body>
 
 <div class="row">
@@ -15,10 +23,39 @@
     <div class="col-lg-8">
 
         <h1>Liste des Personnes</h1>
-        <a class="btn btn-success" href="addPerson">Ajouter</a>
+
+        <p>
+        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+        Nouvelle Personne
+        </button>
+        </p>
+
+        <div class="collapse" id="collapseExample">
+            <div class="card card-body">
+                <!--/*@thymesVar id="personForm" type="com.example.premier.Form.PersonneForm"*/-->
+                <form th:action="@{/addPerson}" th:object="${personForm}" method="POST">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <input type="text" required name="nom"  class="form-control" placeholder="Nom"/>
+                            <br>
+                            <input type="submit" value="Ajouter" class="btn btn-success" />
+                            <input type="reset" value="Annuler" class="btn btn-warning" />
+                        </div>
+                        <br>
+                        <div class="col-lg-6">
+                            <input type="text" required name="prenom" class="form-control" placeholder="Prénom" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+
 
 
         <br/><br/>
+
+
         <div>
             <table id="maTablePersonne" class="table animated slideInUp display table-striped">
                 <thead>
@@ -38,13 +75,15 @@
                     <td>
                         <!-- Modifier -->
                         <button type="button" class="btn btn-primary animated bounce" data-toggle="modal" th:attr="data-target='#exampleModal'+${person.id}" >
-                            Vite Ici
+                            Modifier
                         </button>
 
                         <!-- Suppimer -->
-                        <a th:href="@{/supprimer(idPersonne=${person.id})}" class="btn btn-danger">
+                        <a th:attr="data-confirm='Voulez-vous vraiment supprimer '+${person.nom}+' '+${person.prenom}+' ?'" style="color: white;" th:href="@{/supprimer(idPersonne=${person.id})}" class="btn btn-danger">
                             Supprimer
                         </a>
+
+
                     </td>
 
                 </tr>
@@ -127,11 +166,34 @@
                 "zeroRecords": "Table est vide. Aucune Personne.",
                 "info": "Page _PAGE_ sur _PAGES_",
                 "infoEmpty": "Aucune personne trouvée",
-                "infoFiltered": "(filtered from _MAX_ total records)"
+                "infoFiltered": "(Trier sur _MAX_ de Personnes Totales)"
             }
         });
 
     } );
+
+
+
+    $(function() {
+        $('a[data-confirm]').click(function(ev) {
+            var href = $(this).attr('href');
+
+            if (!$('#dataConfirmModal').length) {
+                $('body').append('<div id="dataConfirmModal" class="modal" role="dialog" aria-labelledby="dataConfirmLabel" aria-hidden="true"><div class="modal-dialog"><div class="modal-content"><div class="modal-header">' +
+                    '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>' +
+                    '<h3 id="dataConfirmLabel">Merci de Confirmer</h3></div><div class="modal-body">' +
+                    '</div><div class="modal-footer"><button class="btn btn-success" data-dismiss="modal" aria-hidden="true">Non</button>' +
+                    '<a class="btn btn-danger" id="dataConfirmOK">Oui</a></div></div></div></div>');
+            }
+            $('#dataConfirmModal').find('.modal-body').text($(this).attr('data-confirm'));
+            $('#dataConfirmOK').attr('href', href);
+            $('#dataConfirmModal').modal({show:true});
+
+            return false;
+        });
+
+    });
+
 </script>
 
 </html>

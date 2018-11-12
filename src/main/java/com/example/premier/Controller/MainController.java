@@ -1,5 +1,4 @@
 package com.example.premier.Controller;
-
 import com.example.premier.Form.PersonneForm;
 import com.example.premier.Functions.Functions;
 import com.example.premier.Model.Personne;
@@ -10,7 +9,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -43,7 +41,7 @@ import java.util.Vector;
         @RequestMapping(value = {"/", "/index"}, method = RequestMethod.GET)
         public String index(Model model){
             model.addAttribute("message", message);
-            return "index";
+            return "listPersonne";
         }
 
     public String defaultPage(HttpServletRequest request) {
@@ -63,16 +61,11 @@ import java.util.Vector;
         }
 
 
-
-        @RequestMapping(value = {"/addPerson"}, method = RequestMethod.GET)
-        public String showAddPersonPage(Model model) {
-
-            PersonneForm personForm = new PersonneForm();
-            model.addAttribute("personForm", personForm);
-
-            return "addPersonne";
+        @RequestMapping(value = "/addPerson", method = RequestMethod.GET)
+        public String voirPersonne(Model model)
+        {
+            return "redirect:/personList";
         }
-
 
 
         @RequestMapping(value = {"/addPerson"}, method = RequestMethod.POST)
@@ -88,7 +81,7 @@ import java.util.Vector;
             }
 
             model.addAttribute("errorMessage", errorMessage);
-            return "addPersonne";
+            return "listPersonne";
         }
 
 
@@ -114,7 +107,6 @@ import java.util.Vector;
     }
 
 
-
     @RequestMapping(value = "/supprimer", method = RequestMethod.GET)
     public String supprimer(Model model, @RequestParam(value = "idPersonne") int idPersonne)
     {
@@ -130,6 +122,4 @@ import java.util.Vector;
         return "redirect:/personList";
     }
 
-
 }
-
